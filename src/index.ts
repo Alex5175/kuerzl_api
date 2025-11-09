@@ -53,12 +53,13 @@ const app = new Elysia()
   .get(
     "/:newUrl",
     async ({ params: { newUrl }, redirect }) => {
+      const withProtocol = "https://" + process.env.URL + newUrl;
       const result = await db
         .select({
           targetUrl: urlTable.targetUrl,
         })
         .from(urlTable)
-        .where(eq(urlTable.shortUrl, newUrl));
+        .where(eq(urlTable.shortUrl, withProtocol));
 
       const targetUrl = result[0]?.targetUrl;
 
