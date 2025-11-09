@@ -28,10 +28,10 @@ const app = new Elysia()
         .where(eq(urlTable.targetUrl, url));
 
       if (existing[0]?.shortUrl) {
-        return { newUrl: existing[0]?.shortUrl };
+        return { newUrl: "https://" + process.env.URL + existing[0]?.shortUrl };
       }
 
-      const shortUrl = "https://" + process.env.URL + uuidBase62.v4();
+      const shortUrl = uuidBase62.v4();
 
       await db
         .insert(urlTable)
@@ -41,7 +41,7 @@ const app = new Elysia()
         })
         .onConflictDoNothing();
 
-      return { newUrl: shortUrl };
+      return { newUrl: "https://" + process.env.URL + shortUrl };
     },
     {
       body: t.Object({
@@ -53,13 +53,12 @@ const app = new Elysia()
   .get(
     "/:newUrl",
     async ({ params: { newUrl }, redirect }) => {
-      const withProtocol = "https://" + process.env.URL + newUrl;
       const result = await db
         .select({
           targetUrl: urlTable.targetUrl,
         })
         .from(urlTable)
-        .where(eq(urlTable.shortUrl, withProtocol));
+        .where(eq(urlTable.shortUrl, newUrl));
 
       const targetUrl = result[0]?.targetUrl;
 
