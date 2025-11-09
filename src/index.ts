@@ -13,7 +13,7 @@ const app = new Elysia()
   .use(openapi())
   .use(
     cors({
-      origin: process.env.CORS_URL,
+      origin: "*",
     })
   )
   .post(
