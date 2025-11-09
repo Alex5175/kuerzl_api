@@ -29,7 +29,7 @@ const app = new Elysia()
         })
         .onConflictDoNothing();
 
-      return `${process.env.URL}${shortUrl}`;
+      return { newUrl: `${process.env.URL}${shortUrl}` };
     },
     {
       body: t.Object({
