@@ -1,5 +1,6 @@
 import { Elysia, redirect, t } from "elysia";
-
+import { openapi } from "@elysiajs/openapi";
+import { cors } from "@elysiajs/cors";
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { eq, ne } from "drizzle-orm";
@@ -9,6 +10,12 @@ import uuidBase62 from "uuid-base62";
 const db = drizzle(process.env.DATABASE_URL!);
 
 const app = new Elysia()
+  .use(openapi())
+  .use(
+    cors({
+      origin: "*",
+    })
+  )
   .post(
     "/shorten",
     async ({ body: { url } }) => {
