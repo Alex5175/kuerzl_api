@@ -66,7 +66,7 @@ const app = new Elysia()
         return { error: "Not found" };
       }
 
-      return redirect(targetUrl, 308);
+      return redirect(targetUrl, 301);
     },
     {
       params: t.Object({
