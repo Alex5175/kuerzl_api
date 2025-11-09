@@ -50,6 +50,7 @@ const app = new Elysia()
         newUrl: t.String(),
       }),
     }
-  );
+  )
+  .get("/status", () => "All good");
 
 export default app;
