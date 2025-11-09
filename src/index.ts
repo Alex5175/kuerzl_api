@@ -19,6 +19,18 @@ const app = new Elysia()
   .post(
     "/shorten",
     async ({ body: { url } }) => {
+      // check if url is already in db and return existing short url
+      const existing = await db
+        .select({
+          shortUrl: urlTable.shortUrl,
+        })
+        .from(urlTable)
+        .where(eq(urlTable.targetUrl, url));
+
+      if (existing[0]?.shortUrl) {
+        return { newUrl: `${process.env.URL}${existing[0].shortUrl}` };
+      }
+
       const shortUrl = uuidBase62.v4();
 
       await db
@@ -48,7 +60,11 @@ const app = new Elysia()
         .from(urlTable)
         .where(eq(urlTable.shortUrl, newUrl));
 
-      const { targetUrl } = result[0];
+      const targetUrl = result[0]?.targetUrl;
+
+      if (!targetUrl) {
+        return { error: "Not found" };
+      }
 
       return redirect(targetUrl, 308);
     },
