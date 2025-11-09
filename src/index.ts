@@ -59,7 +59,7 @@ const app = new Elysia()
         return { newUrl: "https://" + process.env.URL + existing[0]?.shortUrl };
       }
 
-      const shortUrl = uuidBase62.v4();
+      const shortUrl = uuidBase62.v4().slice(0, 8);
 
       await db
         .insert(urlTable)
