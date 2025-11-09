@@ -28,10 +28,10 @@ const app = new Elysia()
         .where(eq(urlTable.targetUrl, url));
 
       if (existing[0]?.shortUrl) {
-        return { newUrl: `${process.env.URL}${existing[0].shortUrl}` };
+        return { newUrl: existing[0]?.shortUrl };
       }
 
-      const shortUrl = uuidBase62.v4();
+      const shortUrl = "https://" + process.env.URL + uuidBase62.v4();
 
       await db
         .insert(urlTable)
@@ -41,7 +41,7 @@ const app = new Elysia()
         })
         .onConflictDoNothing();
 
-      return { newUrl: `${process.env.URL}${shortUrl}` };
+      return { newUrl: shortUrl };
     },
     {
       body: t.Object({
